@@ -1,0 +1,17 @@
+/yarn-error.log
+/node_modules
+/build
+/logs
+/_site
+/.netlify
+/functions
+/_data/**
+!/_data/.gitkeep
+/.tmp
+/.env
+_site
+.jekyll-cache
+.jekyll-metadata
+vendor
+/_includes/analytics.html
+/dist

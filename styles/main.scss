@@ -1,0 +1,25 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+
+/*
+.btn {
+    @apply inline-block w-24 text-blue-900 m-2 bg-white;
+}
+
+.hike-select {
+    @apply block w-full appearance-none p-3 rounded-none text-blue-500;
+}
+*/
+
+@import "tailwindcss/utilities";
+
+@import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Inter:wght@400;700;900&display=swap');
+
+
+a {
+    @apply text-orange-500;
+}
+
+p {
+    @apply my-8;
+}

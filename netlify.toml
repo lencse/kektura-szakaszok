@@ -1,0 +1,12 @@
+[build]
+    publish = "_site/"
+    command = "make"
+    functions = "functions/"
+
+[[redirects]]
+    from = "https://kektura-szakaszok.netlify.app/*"
+    to = "https://kektura-szakaszok.lencse.io/:splat"
+    force = true
+
+[dev]
+    publish = "_site/"

@@ -1,0 +1,22 @@
+{
+    "ignore": [
+        "_includes",
+        "_layouts",
+        "_site",
+        ".jekyll_cache",
+        ".netlify",
+        "",
+        "",
+        "images",
+        "styles",
+        "src",
+        "dist",
+        "dist/**",
+        ".DS_Store",
+        ".git",
+        "logs",
+        "functions/**",
+        "_layouts/**"
+    ],
+    "ext": "js,json,ejs"
+}
