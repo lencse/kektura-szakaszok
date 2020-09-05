@@ -2,7 +2,7 @@ import axios from 'axios'
 import { load } from 'cheerio'
 import { parseString } from 'xml2js'
 import { Coordinate, Stamp, StampWithPathNodes, Data, Checkpoint } from '../types'
-import { getDistance } from 'geolib'
+import { getDistance, convertSpeed } from 'geolib'
 import { writeFileSync } from 'fs'
 import { resolve } from 'path'
 
@@ -103,7 +103,8 @@ const distanceInMeters = (coord1: Coordinate, coord2: Coordinate): number => get
 const getStamps = async (trackNodes): Promise<StampWithPathNodes[]> => {
     const gpx = await httpGet(`http://turistautak.openstreetmap.hu/pecsetmind.php?ph=Orsz%C3%A1gos%20K%C3%A9kt%C3%BAra`)
     const stamps = await stampsFromGpx(gpx)
-    return stamps.map((stamp) => {
+    console.info(stamps.length, 'stamps data downloaded from kektura.hu')
+    return stamps.map((stamp, stampIdx) => {
         const distances = trackNodes.map((node) => distanceInMeters(node, stamp.coordinate))
         const minDistance = Math.min(...distances.filter((d) => d < 3000))
         const nearestIdx = distances.findIndex((d) => minDistance === d)
@@ -116,12 +117,12 @@ const getStamps = async (trackNodes): Promise<StampWithPathNodes[]> => {
         while (last < trackNodes.length && distanceInMeters(trackNodes[last], nearestNode) < 50) {
             ++last
         }
+        console.info(stampIdx + 1, '/', stamps.length, 'stamps processed')
         return {
             ...stamp,
             firstNearNodeIdx: Math.max(0, first),
             lastNearNodeIdx: Math.min(trackNodes.length - 1, last)
         }
-
     })
 }
 
@@ -157,7 +158,8 @@ const getCheckpoints = (stamps: StampWithPathNodes[]): Checkpoint[] => {
 }
 
 const download = async () => {
-    const track = (await getTrack()) //.filter((v, i) => i%100 === 0)
+    const track = (await getTrack()) // .filter((v, i) => i%100 === 0)
+    console.info(track.length, 'track nodes downloaded from kektura.hu')
     const stamps = await getStamps(track)
     const checkpoints = getCheckpoints(stamps)
     const data: Data = {
