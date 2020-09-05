@@ -38,18 +38,10 @@ watch: node_modules
 watch_data:
 	make watch_ts & $(BIN)/nodemon bin/write-data.js
 
-test_ts: node_modules src
-	$(BIN)/jest --verbose ; mv test-report.xml logs/jest
-
-test: test_ts test_compiled
-
 verify: lint test
 
 watch_ts:
 	$(BIN)/tsc -p . --outDir ./build --watch --pretty
-
-test_compiled: build node_modules
-	$(BIN)/jest --config jest.config.build.js
 
 lint: node_modules
 	$(BIN)/tslint -c tslint.json -p .
@@ -82,3 +74,6 @@ functions: build _data/data.json download.js
 	cp -r ejs-templates .tmp/functions/download-map
 	cp download-map.js .tmp/functions/download-map
 	node build-functions.js
+
+test:
+	SERVER_PORT=4571 $(BIN)/jest
