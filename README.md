@@ -23,5 +23,11 @@ make
 make watch
 ```
 
+If you're changing the data fetching script:
+
+```bash
+make watch && make watch_data:
+```
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
