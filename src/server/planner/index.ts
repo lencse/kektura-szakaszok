@@ -1,6 +1,7 @@
 import { Data, Stamp } from '../../types'
 import { compile } from 'ejs'
 import { renderAnalytics } from '../../frontend/analytics'
+import { compress } from 'lzutf8'
 
 const handler = (data: Data, template: string, route: string): string => {
     const parts = route.match(/(\d+-\d+-[a-f0-9]{6})/g)
@@ -27,7 +28,8 @@ const handler = (data: Data, template: string, route: string): string => {
                 stamps
             }
         })
-    return compile(template)({parts, renderAnalytics, pageTitle: 'Kéktúra tervező'})
+    const partsCompressed = compress(JSON.stringify(parts), { outputEncoding: 'Base64' })
+    return compile(template)({partsCompressed, renderAnalytics, pageTitle: 'Kéktúra tervező'})
 }
 
 export const getHandler  = (data: Data, template: string) => async (event, context) => {

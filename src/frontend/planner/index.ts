@@ -2,6 +2,7 @@ import * as leaflet from 'leaflet'
 import { map as config } from '../../config'
 import { Coordinate, Part, Stamp } from '../../types'
 import ready from '../ready'
+import { decompress } from 'lzutf8'
 
 const renderMap = (parts: Part[]) => {
     const minLat = Math.min(...parts.map(
@@ -47,6 +48,11 @@ const renderMap = (parts: Part[]) => {
 }
 
 ready(async () => {
-    const {parts } = JSON.parse(document.querySelector('body').dataset.data)
+    const parts = JSON.parse(
+        decompress(
+            JSON.parse(document.querySelector('body').dataset.data).partsCompressed,
+            { inputEncoding: 'Base64' }
+        )
+    )
     renderMap(parts)
 })
