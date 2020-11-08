@@ -68,6 +68,11 @@ functions: build _data/data.json download.js
 	cp -r _data .tmp/functions/map
 	cp -r ejs-templates .tmp/functions/map
 	cp map.js .tmp/functions/map
+	mkdir -p .tmp/functions/planner
+	cp -r build .tmp/functions/planner
+	cp -r _data .tmp/functions/planner
+	cp -r ejs-templates .tmp/functions/planner
+	cp planner.js .tmp/functions/planner
 	mkdir -p .tmp/functions/download-map
 	cp -r build .tmp/functions/download-map
 	cp -r _data .tmp/functions/download-map

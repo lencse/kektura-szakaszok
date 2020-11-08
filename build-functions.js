@@ -11,6 +11,8 @@ const build = async () => {
        .pipe(Extract({ path: resolve(process.cwd(), 'functions/map') }))
     createReadStream(resolve(process.cwd(), '.tmp/download-map.zip'))
        .pipe(Extract({ path: resolve(process.cwd(), 'functions/download-map') }))
+    createReadStream(resolve(process.cwd(), '.tmp/planner.zip'))
+       .pipe(Extract({ path: resolve(process.cwd(), 'functions/planner') }))
 }
 
 build()
