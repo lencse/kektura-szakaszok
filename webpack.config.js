@@ -69,6 +69,10 @@ module.exports = webpackMerge(
             map: [
                 './build/frontend/map/index.js',
                 './styles/map.scss'
+            ],
+            planner: [
+                './build/frontend/planner/index.js',
+                './styles/map.scss'
             ]
         },
         output: {

@@ -110,13 +110,13 @@ const getStamps = async (trackNodes): Promise<StampWithPathNodes[]> => {
         const nearestIdx = distances.findIndex((d) => minDistance === d)
         const nearestNode = trackNodes[nearestIdx]
         let first = nearestIdx
-        while (first >= 0 && distanceInMeters(trackNodes[first], nearestNode) < 50) {
-            --first
-        }
+        // while (first >= 0 && distanceInMeters(trackNodes[first], nearestNode) < 50) {
+        //     --first
+        // }
         let last = nearestIdx
-        while (last < trackNodes.length && distanceInMeters(trackNodes[last], nearestNode) < 50) {
-            ++last
-        }
+        // while (last < trackNodes.length && distanceInMeters(trackNodes[last], nearestNode) < 50) {
+        //     ++last
+        // }
         console.info(stampIdx + 1, '/', stamps.length, 'stamps processed')
         return {
             ...stamp,
@@ -156,7 +156,6 @@ const getCheckpoints = (stamps: StampWithPathNodes[]): Checkpoint[] => {
     }
     return result
 }
-
 const download = async () => {
     const track = (await getTrack()) // .filter((v, i) => i%100 === 0)
     console.info(track.length, 'track nodes downloaded from kektura.hu')

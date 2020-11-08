@@ -29,3 +29,10 @@ export interface Checkpoint extends WithPathNodes {
     id: string
     stamps: Stamp[]
 }
+
+export interface Part {
+    track: Coordinate[],
+    stamps: Stamp[],
+    color: string,
+    ids: number[]
+}

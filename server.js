@@ -12,6 +12,7 @@ app.use(async(ctx) => {
         'download',
         'map',
         'download-map',
+        'planner'
     ]) {
         if (
             'GET' === ctx.request.method
