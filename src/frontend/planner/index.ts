@@ -37,13 +37,6 @@ const renderMap = (parts: Part[]) => {
     ).addTo(map)
     parts.forEach((part) => {
         leaflet.polyline(part.track.map((coord) => [coord.lat, coord.lon]), {color: `#${part.color}`}).addTo(map)
-        part.stamps.forEach((stamp) => leaflet.marker([
-            stamp.coordinate.lat,
-            stamp.coordinate.lon
-        ], {
-            keyboard: false,
-            title: stamp.name
-        }).addTo(map))
     })
 }
 
