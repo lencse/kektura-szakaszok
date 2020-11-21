@@ -28,7 +28,7 @@ _data/data.json: build
 
 watch: node_modules
 	make clean && make build && ( \
-		bundle exec jekyll serve & \
+		bundle exec jekyll serve --watch & \
 		$(BIN)/tsc -p . --outDir ./build --watch --pretty & \
 		$(BIN)/webpack-dev-server & \
 		$(BIN)/nodemon bin/write-analytics.js & \
