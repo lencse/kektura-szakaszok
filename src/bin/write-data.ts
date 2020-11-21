@@ -67,22 +67,16 @@ const stampsFromGpx = async (gpx: string): Promise<Stamp[]> => {
                 lon: Number(node.$.lon),
             },
             description: String(node.desc[0]),
-            url: String(node.url[0]),
+            url: '',
             name: String(node.name[0])
-            // name: console.dir(node) || String(node.name[0])
         }))
-        .filter((unfilteredStamp) => unfilteredStamp.name.match(/OKTPH/))
         .map((stamp, idx) => ({
             coordinate: stamp.coordinate,
-            name:
-                rename[stamp.name] ||
-                stamp.name,
-            checkpointId:
-                exceptions[stamp.name] ||
-                stamp.name.match(/OKTPH_([0-9]+(_[A-Z])?)/)[1],
+            name: stamp.name,
+            checkpointId: stamp.name,
             description: stamp.description,
-            url: stamp.url,
-            id: idx + (reorder[stamp.name] || 0)
+            url: '',
+            id: idx
         }))
         .sort((cp1, cp2) => cp1.id - cp2.id)
 }
@@ -100,8 +94,21 @@ const distanceInMeters = (coord1: Coordinate, coord2: Coordinate): number => get
     { longitude: coord2.lon, latitude: coord2.lat }
 )
 
+const stampsGpxUrl = (links: Cheerio): string => {
+    for (const idx in Object.keys(links)) {
+        const { href } = links[idx].attribs
+        if (idx.match(/^\d+$/) && href.match(/okt_teljes_belyegzohelyek_gpx/)) {
+            return href
+        }
+    }
+    throw new Error('Not found track gpx link')
+}
+
 const getStamps = async (trackNodes): Promise<StampWithPathNodes[]> => {
-    const gpx = await httpGet(`http://turistautak.openstreetmap.hu/pecsetmind.php?ph=Orsz%C3%A1gos%20K%C3%A9kt%C3%BAra`)
+    const html = await httpGet('https://kektura.hu/szakaszok.html')
+    const dom = load(html)
+    const links = dom('a[href$=".gpx"]')
+    const gpx = await httpGet(`https://kektura.hu/${stampsGpxUrl(links)}`)
     const stamps = await stampsFromGpx(gpx)
     console.info(stamps.length, 'stamps data downloaded from kektura.hu')
     return stamps.map((stamp, stampIdx) => {
@@ -156,11 +163,12 @@ const getCheckpoints = (stamps: StampWithPathNodes[]): Checkpoint[] => {
     }
     return result
 }
+
 const download = async () => {
-    const track = (await getTrack()) // .filter((v, i) => i%100 === 0)
+    const track = (await getTrack()) //.filter((v, i) => i%200 === 0)
     console.info(track.length, 'track nodes downloaded from kektura.hu')
     const stamps = await getStamps(track)
-    const checkpoints = getCheckpoints(stamps)
+    const checkpoints = getCheckpoints(stamps).sort((c1, c2) => c1.firstNearNodeIdx - c2.firstNearNodeIdx)
     const data: Data = {
         checkpoints,
         track

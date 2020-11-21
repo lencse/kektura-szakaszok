@@ -16,7 +16,8 @@
         ".git",
         "logs",
         "functions/**",
-        "_layouts/**"
+        "_layouts/**",
+        "_data"
     ],
     "ext": "js,json,ejs"
 }
