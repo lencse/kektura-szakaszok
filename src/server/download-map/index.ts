@@ -21,7 +21,7 @@ const handler = (data: Data, template: string, route: string): string => {
     const redirectTo = [
         process.env.SERVER_PREFIX,
         'download',
-        `${route}.kml`
+        route
     ].join('/')
     return compile(template)({track, stamps, redirectTo, renderAnalytics, pageTitle})
 }
