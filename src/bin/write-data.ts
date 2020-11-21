@@ -86,6 +86,8 @@ const getTrack = async (): Promise<Coordinate[]> => {
     const dom = load(html)
     const links = dom('a[href$=".gpx"]')
     const trackGpx = await httpGet(`https://kektura.hu/${trackGpxUrl(links)}`)
+    // const trackGpx = readFileSync('/tmp/track.gpx').toString()
+    // writeFileSync('/tmp/track.gpx', trackGpx)
     return await coordinatesFromGpx(trackGpx)
 }
 
@@ -109,26 +111,38 @@ const getStamps = async (trackNodes): Promise<StampWithPathNodes[]> => {
     const dom = load(html)
     const links = dom('a[href$=".gpx"]')
     const gpx = await httpGet(`https://kektura.hu/${stampsGpxUrl(links)}`)
+    // const gpx = readFileSync('/tmp/stamps.gpx').toString()
+    // writeFileSync('/tmp/stamps.gpx', gpx)
+
     const stamps = await stampsFromGpx(gpx)
     console.info(stamps.length, 'stamps data downloaded from kektura.hu')
     return stamps.map((stamp, stampIdx) => {
-        const distances = trackNodes.map((node) => distanceInMeters(node, stamp.coordinate))
-        const minDistance = Math.min(...distances.filter((d) => d < 3000))
-        const nearestIdx = distances.findIndex((d) => minDistance === d)
-        const nearestNode = trackNodes[nearestIdx]
-        let first = nearestIdx
+        var minDistance = Infinity
+        var nearestIdx = -1
+        trackNodes.forEach((node, idx) => {
+            const distance = distanceInMeters(node, stamp.coordinate)
+            if (distance < minDistance) {
+                minDistance = distance
+                nearestIdx = idx
+            }
+        })
+        // const distances = trackNodes.map((node) => distanceInMeters(node, stamp.coordinate))
+        // const minDistance = Math.min(...distances.filter((d) => d < 3000))
+        // const nearestIdx = distances.findIndex((d) => minDistance === d)
+        // const nearestNode = trackNodes[nearestIdx]
+        // let first = nearestIdx
         // while (first >= 0 && distanceInMeters(trackNodes[first], nearestNode) < 50) {
         //     --first
         // }
-        let last = nearestIdx
+        // let last = nearestIdx
         // while (last < trackNodes.length && distanceInMeters(trackNodes[last], nearestNode) < 50) {
         //     ++last
         // }
         console.info(stampIdx + 1, '/', stamps.length, 'stamps processed')
         return {
             ...stamp,
-            firstNearNodeIdx: Math.max(0, first),
-            lastNearNodeIdx: Math.min(trackNodes.length - 1, last)
+            firstNearNodeIdx: nearestIdx,
+            lastNearNodeIdx: nearestIdx
         }
     })
 }
